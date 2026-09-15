@@ -12,8 +12,8 @@ import com.popesoftware.test.*;
 
 public class CS106A_CaesarCipher extends ConsoleProgram
 {
-	private static final String SENTINEL = "ENDPROGRAM";
-	private String finalEncryptedStr;
+	private String encryptedMessage = "";
+	//PSCipher cipher = new PSCipher();
 	
 	public void run()
 	{
@@ -21,11 +21,9 @@ public class CS106A_CaesarCipher extends ConsoleProgram
 		while(true){
 			int clientShift = readInt("Enter the number of character positions to shift: ");
 			String clientStr = readLine("Enter a message: ");
-			
-			if (clientStr.equals(SENTINEL)){ println("bye now."); break; }
-			
-			String encodedMessage = PSCipher.encodeCaesarCipher(clientStr, clientShift);
-			println("Encoded message: " + encodedMessage);
+			encryptedMessage = new PSCipher().encodeCaesarCipher(clientStr, clientShift);
+			println("Encoded message: " + encryptedMessage);
+			encryptedMessage = "";
 		}
 	}
 	
@@ -33,9 +31,5 @@ public class CS106A_CaesarCipher extends ConsoleProgram
 	private void introduceApp()
 	{
 		println("This program encodes a message using a Caesar cipher.");
-		int clientShift = readInt("Enter the number of character positions to shift: ");
-		String clientStr = readLine("");
-		
-		println("Encoded messsage: " + finalEncryptedStr);
 	}
 }
