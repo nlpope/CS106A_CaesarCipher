@@ -7,6 +7,8 @@ public class PSCipher
 	private static final String DELIMITERS = "!@#$%^&*()_-+={[}]:;\"'<,>.?/~`/\\ ";
 	//private static String originalMessage;
 	private static String encryptedMessage = "";
+	private static char upperLimit;
+	private static char lowerLimit;
 	
 	public static String encodeCaesarCipher(String str, int shift)
 	{
@@ -22,26 +24,20 @@ public class PSCipher
 	private static void checkAndReplace(String token, int shift)
 	{
 		for (int i = 0; i < token.length(); i++){
-			boolean firstCase = (token.charAt(i) > 64 && token.charAt(i) < 91);
-			boolean secondCase = (token.charAt(i) > 96 && token.charAt(i) < 123);
-			if (firstCase){
-				int lowerLimit = 65;
-				int upperLimit = 90;
+			char tokenChar = token.charAt(i);
+			boolean firstCase = (tokenChar > 64 && token.charAt(i) < 91);
+			boolean secondCase = (tokenChar > 96 && token.charAt(i) < 123);
+			
+			if (firstCase){ lowerLimit = 65; upperLimit = 90; } 
+			if (secondCase){ lowerLimit = 97; upperLimit = 122; }  
+			if (tokenChar + shift > upperLimit){ handlePositiveShift(shift, tokenChar); }
+			else if (tokenChar + shift < lowerLimit){ handleNegativeShift(shift, tokenChar); } 
+			else { encryptedChar = tokenChar + shift; }
+				if (token.charAt(i) + shift > upperLimit) { handlePositiveShift(); }
+				else if (token.charAt(i) + shift < lowerLimit){ handleNegativeShift(); }
 				
 				
-				//where is my shift 4 here for X? 
-				//shift would equal charAt value that spills over 90
-				//so if charAt's int value + shift ... > 90
-				//make encryptedmsg(i) = value jump back to 65 then account for remaining shift points
-				//so while shift is not zero, increment from char value up til spills over z 
-				if (token.charAt(i) + shift > upperLimit){
-					
-				}
-				//handle negatives later
-				for (int j = 0; j <= shift; j++){
-					if (token.charAt(i) + j >= upperLimit){ //back to 65 } 
-				}
-				encryptedMessage += token.charAt(i) + respectiveShift;
+				encryptedMessage += encryptedChar;
 			} else if (secondCase){
 				
 			} else { 
@@ -50,16 +46,21 @@ public class PSCipher
 		}
 	}
 	
-	/***
-	private static boolean checkClientInputValidityFor(String word)
+	
+	private static void handlePositiveShift(int shift, char tokenChar)
 	{
-		if (word.length() == 0) { return false; } 
-		for (int i = 0; i < word.length(); i++){
-			boolean firstCase = word.charAt(i) < 65 || word.charAt(i) > 90;
-			boolean secondCase = word.charAt(i) < 97 || word.charAt(i) > 122;
-			if (firstCase && secondCase){ return false; }
+		char encryptedChar = tokenChar;
+		for (int i = 0; i <= shift; i++){
+			if (encryptedChar + i > upperLimit){ 
+				encryptedChar = lowerLimit; 
+			} 
+			encryptedChar++;
 		}
-		return true;
 	}
-	*/
+	
+	
+	private static void handleNegativeShift(int shift, char tokenChar)
+	{
+		
+	}
 }
