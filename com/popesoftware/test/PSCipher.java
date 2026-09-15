@@ -5,10 +5,7 @@ import java.util.*;
 public class PSCipher
 {
 	private static final String DELIMITERS = "!@#$%^&*()_-+={[}]:;\"'<,>.?/~`/\\ ";
-	//private static String originalMessage;
-	private static String encryptedMessage = "";
-	private static char upperLimit;
-	private static char lowerLimit;
+	
 	
 	public static String encodeCaesarCipher(String str, int shift)
 	{
@@ -25,42 +22,60 @@ public class PSCipher
 	{
 		for (int i = 0; i < token.length(); i++){
 			char tokenChar = token.charAt(i);
-			boolean firstCase = (tokenChar > 64 && token.charAt(i) < 91);
-			boolean secondCase = (tokenChar > 96 && token.charAt(i) < 123);
+			boolean upperCase = (tokenChar > 64 && token.charAt(i) < 91);
+			boolean lowerCase = (tokenChar > 96 && token.charAt(i) < 123);
 			
-			if (firstCase){ lowerLimit = 65; upperLimit = 90; } 
-			if (secondCase){ lowerLimit = 97; upperLimit = 122; }  
-			if (tokenChar + shift > upperLimit){ handlePositiveShift(shift, tokenChar); }
-			else if (tokenChar + shift < lowerLimit){ handleNegativeShift(shift, tokenChar); } 
-			else { encryptedChar = tokenChar + shift; }
-				if (token.charAt(i) + shift > upperLimit) { handlePositiveShift(); }
-				else if (token.charAt(i) + shift < lowerLimit){ handleNegativeShift(); }
-				
-				
-				encryptedMessage += encryptedChar;
-			} else if (secondCase){
-				
-			} else { 
-				encryptedMessage += token.charAt(i);
+			if (!upperCase && !lowerCase){ encryptedMessage += tokenChar; return; }
+			
+			lowerLimit = upperCase ? (char) 65 : 97;
+			upperLimit = lowerCase ? (char) 90 : 122;
+			char shiftedChar = (char) (tokenChar + shift);
+			
+			if (shiftedChar > upperLimit || shiftedChar < lowerLimit){ 
+				handleSpillOverFor(tokenChar, shift); 
+			} else {
+				encryptedMessage += shiftedChar;
 			}
 		}
 	}
 	
 	
-	private static void handlePositiveShift(int shift, char tokenChar)
+	private static void handleSpillOverFor(char tokenChar, int shift)
+	{
+		if (shift < 0){ handleNegativeSpillFor(tokenChar, shift); }
+		else { handlePositiveSpillFor(tokenChar, shift); }
+	}
+		
+	
+	private static void handlePositiveSpillFor(char tokenChar, int shift)
 	{
 		char encryptedChar = tokenChar;
-		for (int i = 0; i <= shift; i++){
-			if (encryptedChar + i > upperLimit){ 
-				encryptedChar = lowerLimit; 
-			} 
-			encryptedChar++;
+		while (shift != 0){
+			if (encryptedChar + 1 > upperLimit){ encryptedChar = lowerLimit; } 
+			else { encryptedChar++; }
+			shift--;
 		}
-	}
-	
-	
-	private static void handleNegativeShift(int shift, char tokenChar)
-	{
 		
+		encryptedMessage += encryptedChar;
 	}
+	
+	
+	private static void handleNegativeSpillFor(char tokenChar, int shift)
+	{
+		char encryptedChar = tokenChar;
+		while (shift != 0){
+			if (encryptedChar - 1 < lowerLimit){ encryptedChar = upperLimit; } 
+			else { encryptedChar--; }
+			shift++;
+		}
+		
+		encryptedMessage += encryptedChar;
+	}
+	
+	private static String encryptedMessage = "";
+	private static char upperLimit;
+	private static char lowerLimit;
+
 }
+	
+	

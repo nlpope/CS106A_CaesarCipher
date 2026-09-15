@@ -19,9 +19,13 @@ public class CS106A_CaesarCipher extends ConsoleProgram
 	{
 		introduceApp();
 		while(true){
-			String clientStr = readLine("enter string: ");
-			if (clientStr.equals(SENTINEL)){println("bye now."); break;}
-			println(PSCipher.encodeCaesarCipher(clientStr));
+			int clientShift = readInt("Enter the number of character positions to shift: ");
+			String clientStr = readLine("Enter a message: ");
+			
+			if (clientStr.equals(SENTINEL)){ println("bye now."); break; }
+			
+			String encodedMessage = PSCipher.encodeCaesarCipher(clientStr, clientShift);
+			println("Encoded message: " + encodedMessage);
 		}
 	}
 	
